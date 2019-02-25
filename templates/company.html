@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title> Devlin Equity Prtfolio </title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <h1>{{ x["name"] }}  </h1>
+
+  <h2> Market cap </h2>
+  {{'${:,.2f}'.format(x["market_cap"])}}
+
+  <h2> Ticker </h2>
+  {{ x["ticker"].upper() }}
+</body>
