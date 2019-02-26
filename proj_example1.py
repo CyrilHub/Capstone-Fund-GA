@@ -8,13 +8,11 @@ import CPB_Capstone
 
 app = Flask(__name__)
 
-# class average 
-
 
 
 def fetchCompany(ticker):
-    # import CPB_Capstone
-    CPB_Capstone.print_test() 
+    CPB_Capstone.print_test()
+    
     # GET request to url www.iextrading.com/company_name
     r = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format(ticker))
     name = r.json()["quote"]["companyName"]
