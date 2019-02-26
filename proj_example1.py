@@ -36,7 +36,6 @@ def company(user_ticker):
 
 # Run the app when the program starts!
 if __name__ == '__main__':
-    print ("help NEWW")
     app.run(debug=True)
     # fetchCompany("goog")
 
