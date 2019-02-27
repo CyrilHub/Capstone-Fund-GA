@@ -35,11 +35,7 @@ sold = {
         'rgnx' : [70.45, "August 1, 2018"],
         'hpq' : [25.77, "September 1, 2018"],
         }
-# watch = ['chrw', 'ddd', 'rop', 'mtch']
-# sold = ['ba', 'hpq', 'agu']
 
-
-#given a csv, load into dictionary called database
 
 
 class StockCalcs:
@@ -55,6 +51,9 @@ class StockCalcs:
         above_target = (current_price / watch[self.tic]) - 1
         return above_target
 
+    def change_since_sale(self, current_price):
+        post_sale_perf = (current_price / sold[self.tic]) - 1
+        return post_sale_perf
 
 def fetchHeld(ticker):
     # GET request to url www.iextrading.com/company_name
@@ -65,6 +64,10 @@ def fetchHeld(ticker):
     current_price = r.json()["quote"]["latestPrice"]
     prev_close = r.json()["quote"]["previousClose"]
     purchase_price = held[ticker]
+    pe_ratio = r.json()["quote"]["peRatio"]
+    volume = r.json()["quote"]["latestVolume"]
+    avg_volume = r.json()["quote"]["avgTotalVolume"]
+    percent_change = r.json()["quote"]["changePercent"]
     x = StockCalcs(ticker)
     stock_return = x.held_return(current_price)
     return({
@@ -75,11 +78,14 @@ def fetchHeld(ticker):
         "current_price": current_price,
         "prev_close": prev_close,
         "purchase_price": purchase_price,
-        "stock_return" : stock_return
+        "pe_ratio": pe_ratio,
+        "volume": volume,
+        "avg_volume": avg_volume,
+        "stock_return" : stock_return,
+        "percent_change" : percent_change
         })
 
 def fetchWatch(ticker):
-    # GET request to url www.iextrading.com/company_name
     r = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format(ticker))
     name = r.json()["quote"]["companyName"]
     market_cap = r.json()["quote"]["marketCap"]
@@ -100,14 +106,45 @@ def fetchWatch(ticker):
         "above_target" : above_target
         })
 
+def fetchSold(ticker):
+    r = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format(ticker))
+    name = r.json()["quote"]["companyName"]
+    market_cap = r.json()["quote"]["marketCap"]
+    sector = r.json()["quote"]["sector"]
+    current_price = r.json()["quote"]["latestPrice"]
+    prev_close = r.json()["quote"]["previousClose"]
+    price_sold = sold[ticker][0]
+    date_sold = sold[ticker][1]
+    x = StockCalcs(ticker)
+    post_sale_performance = x.change_since_sale(current_price)
+    return({
+        "name": name,
+        "market_cap": market_cap,
+        "ticker": ticker,
+        "sector": sector,
+        "current_price": current_price,
+        "prev_close": prev_close,
+        "target_price": target_price,
+        "above_target" : above_target
+        })
 
     # parse request into databse
 
+@app.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
 
 @app.route('/')
 def home():
     return render_template('home.html')   #render template takes file from templates folder, then returns it as a string.
-
 
 @app.route("/<user_ticker>" )
 def company(user_ticker):

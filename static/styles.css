@@ -1,3 +1,26 @@
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 50%;
+}
+
+th {
+  border: 1px solid #AFA738;
+  background-color: #AFA738;
+  text-align: left;
+  padding: 8px;
+}
+
+td {
+  border: 1px solid #010100;
+  text-align: center;
+  padding: 6px;
+}
+
+tr:nth-child(odd) {
+  background-color: #dddddd;
+}
+
 head {
   color: black;
 }
@@ -17,3 +40,5 @@ h2 {
 h3 {
   color: gray;
 }
+
+/* look up CSS properties margins and padding */
