@@ -59,17 +59,20 @@ def fetchHeld(ticker):
     # GET request to url www.iextrading.com/company_name
     r = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format(ticker))
     name = r.json()["quote"]["companyName"]
-    market_cap = r.json()["quote"]["marketCap"]
+    market_cap = '${:,.2f}'.format(r.json()["quote"]["marketCap"])
     sector = r.json()["quote"]["sector"]
-    current_price = r.json()["quote"]["latestPrice"]
-    prev_close = r.json()["quote"]["previousClose"]
-    purchase_price = held[ticker]
-    pe_ratio = r.json()["quote"]["peRatio"]
-    volume = r.json()["quote"]["latestVolume"]
-    avg_volume = r.json()["quote"]["avgTotalVolume"]
-    percent_change = r.json()["quote"]["changePercent"]
+    current_price = '{:,.2f}'.format(r.json()["quote"]["latestPrice"])
+    prev_close = '${:,.2f}'.format(r.json()["quote"]["previousClose"])
+    purchase_price = '${:,.2f}'.format(held[ticker])
+    if r.json()["quote"]["peRatio"] is None:
+        pe_ratio = "null"
+    else:
+        pe_ratio = '{:,.2f}'.format(r.json()["quote"]["peRatio"])
+    volume = '{:,.0f}'.format(r.json()["quote"]["latestVolume"])
+    avg_volume = '{:,.0f}'.format(r.json()["quote"]["avgTotalVolume"])
+    percent_change = '{:,.2%}'.format(r.json()["quote"]["changePercent"])
     x = StockCalcs(ticker)
-    stock_return = x.held_return(current_price)
+    stock_return = '{:,.2%}'.format(x.held_return(float(current_price)))
     return({
         "name": name,
         "market_cap": market_cap,
@@ -198,3 +201,6 @@ if __name__ == '__main__':
 #     writer=csv.writer(f)
 #     y = fetchCompany("dis")
 #     writer.writerow([0,0,y["current_price"],0,0])
+#
+# r = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format("kopn"))
+# print(r.json()["quote"]["peRatio"])

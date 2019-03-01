@@ -20,19 +20,19 @@
   </tr>
   <tr>
       <td> Market Cap </td>
-      <td> {{ '${:,.2f}'.format(x["market_cap"]) }} </td>
+      <td> {{ x["market_cap"] }} </td>
   </tr>
   <tr>
       <td> Today's Volume  </td>
-      <td> {{ '{:,.0f}'.format(x["volume"]) }} </td>
+      <td> {{ x["volume"] }} </td>
   </tr>
   <tr>
       <td> Average Daily Volume </td>
-      <td> {{ '{:,.0f}'.format(x["avg_volume"]) }} </td>
+      <td> {{ x["avg_volume"] }} </td>
   </tr>
   <tr>
       <td> P/E Ratio </td>
-      <td> {{ '{:,.2f}'.format(x["pe_ratio"]) }} </td>
+      <td> {{ x["pe_ratio"] }} </td>
   </tr>
 </table>
 
@@ -46,23 +46,23 @@
   </tr>
   <tr>
       <td> Previous Close </td>
-      <td> {{ '${:,.2f}'.format(x["prev_close"]) }} </td>
+      <td> {{ x["prev_close"] }} </td>
   </tr>
   <tr>
       <td> Current Price </td>
-      <td> {{ '${:,.2f}'.format(x["current_price"]) }} </td>
+      <td> ${{ x["current_price"] }} </td>
   </tr>
   <tr>
       <td> Daily Price Change </td>
-      <td> {{ '{:,.2%}'.format(x["percent_change"]) }}  </td>
+      <td> {{ x["percent_change"] }}  </td>
   </tr>
   <tr>
       <td> Purchase Price </td>
-      <td> {{ '${:,.2f}'.format(x["purchase_price"]) }} </td>
+      <td> {{ x["purchase_price"] }} </td>
   </tr>
   <tr>
       <td> Return </td>
-      <td> {{ '{:,.2%}'.format(x["stock_return"]) }} </td>
+      <td> {{ x["stock_return"] }} </td>
   </tr>
 </table>
 
