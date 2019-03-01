@@ -167,26 +167,6 @@ def company(user_ticker):
 
 
 
-#
-# with open('stocks_dis.csv', 'a', newline='') as csvfile:
-#   # These are the header row values at the top.
-#   fieldnames = ['purchase','target', 'current', 'date_time', 'change']
-#   # This opens the `DictWriter`.
-#   writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-#   # Write out the header row (this only needs to be done once!).
-#   writer.writeheader()
-#   # Write as many rows as you want!
-#   for i in employees:
-#     writer.writerow(i)
-
-# fieldnames = ['purchase','target', 'current', 'date_time', 'change']
-# with open('stocks_dis.csv','a',newline='') as f:
-#     writer=csv.writer(f)
-#     y = fetchCompany("dis")
-#     writer.writerow([0,0,y["current_price"],0,0])
-
-# with open('mycsvfile.csv') as f:
-#     print(f.read())
 
 
 
@@ -197,6 +177,7 @@ if __name__ == '__main__':
     # fetchCompany("goog")
 
 
+<<<<<<< HEAD
 # with open('stocks_dis.csv','a',newline='') as f:
 #     writer=csv.writer(f)
 #     y = fetchCompany("dis")
@@ -204,3 +185,6 @@ if __name__ == '__main__':
 #
 # r = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format("kopn"))
 # print(r.json()["quote"]["peRatio"])
+=======
+
+>>>>>>> c781e89bf3b2ac717a23d8ab7127d5170075715a
