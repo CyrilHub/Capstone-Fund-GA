@@ -1,4 +1,3 @@
-#project example 1
 
 from flask import Flask, render_template
 import requests
@@ -194,13 +193,3 @@ def company(user_ticker):
 # Run the app when the program starts!
 if __name__ == '__main__':
     app.run(debug=True)
-    # fetchCompany("goog")
-
-
-# with open('stocks_dis.csv','a',newline='') as f:
-#     writer=csv.writer(f)
-#     y = fetchCompany("dis")
-#     writer.writerow([0,0,y["current_price"],0,0])
-#
-# r = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format("kopn"))
-# print(r.json()["quote"]["peRatio"])
