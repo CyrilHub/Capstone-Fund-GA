@@ -10,30 +10,64 @@
 <body>
   <h1> {{ x["name"] }} </h1>
 
+  <h2> Ticker: {{ x["ticker"].upper() }} </h2>
   <h2> Sector: {{ x["sector"] }} </h2>
 
-  <h3> Market cap </h3>
-  {{ '${:,.2f}'.format(x["market_cap"]) }}
+<table>
+  <tr>
+      <th> Fundamental Data </th>
+      <th>                  </th>
+  </tr>
+  <tr>
+      <td> Market Cap </td>
+      <td> {{ x["market_cap"] }} </td>
+  </tr>
+  <tr>
+      <td> Today's Volume  </td>
+      <td> {{ x["volume"] }} </td>
+  </tr>
+  <tr>
+      <td> Average Daily Volume </td>
+      <td> {{ x["avg_volume"] }} </td>
+  </tr>
+  <tr>
+      <td> P/E Ratio </td>
+      <td> {{ x["pe_ratio"] }} </td>
+  </tr>
+</table>
 
-  <h3> Ticker </h3>
-  {{ x["ticker"].upper() }}
+<br>
+<br>
 
-  <h3> Previous Close </h3>
-  {{ '${:,.2f}'.format(x["prev_close"]) }}
-
-  <h3> Current Price </h3>
-  {{ '${:,.2f}'.format(x["current_price"]) }}
-
-  <h3> Target Price </h3>
-  {{ '${:,.2f}'.format(x["target_price"]) }}
-
-  <h3> Percent Above Target </h3>
-  {{ '{:,.2%}'.format(x["above_target"]) }}
-
-
-
+<table>
+  <tr>
+      <th> Price Data </th>
+      <th>            </th>
+  </tr>
+  <tr>
+      <td> Previous Close </td>
+      <td> {{ x["prev_close"] }} </td>
+  </tr>
+  <tr>
+      <td> Current Price </td>
+      <td> ${{ x["current_price"] }} </td>
+  </tr>
+  <tr>
+      <td> Daily Price Change </td>
+      <td> {{ x["percent_change"] }}  </td>
+  </tr>
+  <tr>
+      <td> Purchase Price </td>
+      <td> {{ x["target_price"] }} </td>
+  </tr>
+  <tr>
+      <td> Percent Above Target </td>
+      <td> {{ x["above_target"] }} </td>
+  </tr>
+</table>
 
 
 </body>
+
 
 </html>

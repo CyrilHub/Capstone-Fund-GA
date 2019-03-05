@@ -70,7 +70,7 @@ def fetchHeld(ticker):
     volume = '{:,.0f}'.format(r.json()["quote"]["latestVolume"])
     avg_volume = '{:,.0f}'.format(r.json()["quote"]["avgTotalVolume"])
     percent_change = '{:,.2%}'.format(r.json()["quote"]["changePercent"])
-    x = StockCalcs(ticker)
+    x = StockCalcs(ticker=ticker)
     stock_return = '{:,.2%}'.format(x.held_return(float(current_price)))
     return({
         "name": name,
@@ -90,13 +90,20 @@ def fetchHeld(ticker):
 def fetchWatch(ticker):
     r = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format(ticker))
     name = r.json()["quote"]["companyName"]
-    market_cap = r.json()["quote"]["marketCap"]
+    market_cap = '${:,.2f}'.format(r.json()["quote"]["marketCap"])
     sector = r.json()["quote"]["sector"]
-    current_price = r.json()["quote"]["latestPrice"]
-    prev_close = r.json()["quote"]["previousClose"]
+    current_price = '{:,.2f}'.format(r.json()["quote"]["latestPrice"])
+    prev_close = '${:,.2f}'.format(r.json()["quote"]["previousClose"])
     target_price = watch[ticker]
-    x = StockCalcs(ticker)
-    above_target = x.watch_distance(current_price)
+    if r.json()["quote"]["peRatio"] is None:
+        pe_ratio = "null"
+    else:
+        pe_ratio = '{:,.2f}'.format(r.json()["quote"]["peRatio"])
+    volume = '{:,.0f}'.format(r.json()["quote"]["latestVolume"])
+    avg_volume = '{:,.0f}'.format(r.json()["quote"]["avgTotalVolume"])
+    percent_change = '{:,.2%}'.format(r.json()["quote"]["changePercent"])
+    x = StockCalcs(ticker=ticker)
+    above_target = '{:,.2%}'.format(x.watch_distance(float(current_price)))
     return({
         "name": name,
         "market_cap": market_cap,
@@ -105,7 +112,11 @@ def fetchWatch(ticker):
         "current_price": current_price,
         "prev_close": prev_close,
         "target_price": target_price,
-        "above_target" : above_target
+        "above_target" : above_target,
+        "pe_ratio": pe_ratio,
+        "volume": volume,
+        "avg_volume": avg_volume,
+        "percent_change" : percent_change
         })
 
 def fetchSold(ticker):
@@ -117,7 +128,7 @@ def fetchSold(ticker):
     prev_close = r.json()["quote"]["previousClose"]
     price_sold = sold[ticker][0]
     date_sold = sold[ticker][1]
-    x = StockCalcs(ticker)
+    x = StockCalcs(ticker=ticker)
     post_sale_performance = x.change_since_sale(current_price)
     return({
         "name": name,
