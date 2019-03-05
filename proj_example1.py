@@ -1,5 +1,5 @@
 import CPB_Cap
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import requests
 import csv
 
@@ -53,6 +53,24 @@ class StockCalcs:
     def change_since_sale(self, current_price):
         post_sale_perf = (current_price / sold[self.tic]) - 1
         return post_sale_perf
+
+    def confirm_ticker(self):
+        api = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format(self.tic))
+
+        print(api.json())
+        result = api.json()
+        print(result.keys())
+        if "quote" in result.keys():
+            current_price = '{:,.2f}'.format(api.json()["quote"]["latestPrice"])
+            ticker = self.tic
+            return {
+                "current_price": current_price,
+                "ticker": ticker
+            }
+        else:
+            return None
+
+
 
 def fetchHeld(ticker):
     # GET request to url www.iextrading.com/company_name
@@ -155,9 +173,22 @@ def add_header(r):
     r.headers['Cache-Control'] = 'public, max-age=0'
     return r
 
-@app.route('/')
+@app.route('/', methods = ['GET', 'POST'])
 def home():
-    return render_template('home.html')   #render template takes file from templates folder, then returns it as a string.
+    # input_ticker = StockCalcs(request.form["ticker"])
+    # input_ticker.confirm_ticker()
+    try:
+        new_ticker = (request.form["input_ticker"])
+        ticker_dict = StockCalcs(new_ticker)
+        # new_purchase_price = request.form["purchase_price"]
+        return render_template('home.html', results=ticker_dict.confirm_ticker())   #render template takes file from templates folder, then returns it as a string.
+    except:
+        return render_template('home.html')
+
+
+
+    print("test",request.form["input_ticker"])
+
 
 @app.route("/<user_ticker>" )
 def company(user_ticker):
@@ -177,31 +208,6 @@ def company(user_ticker):
 ### Cyril
 ###
 
-
-
-
-
-
-#
-# with open('stocks_dis.csv', 'a', newline='') as csvfile:
-#   # These are the header row values at the top.
-#   fieldnames = ['purchase','target', 'current', 'date_time', 'change']
-#   # This opens the `DictWriter`.
-#   writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-#   # Write out the header row (this only needs to be done once!).
-#   writer.writeheader()
-#   # Write as many rows as you want!
-#   for i in employees:
-#     writer.writerow(i)
-
-# fieldnames = ['purchase','target', 'current', 'date_time', 'change']
-# with open('stocks_dis.csv','a',newline='') as f:
-#     writer=csv.writer(f)
-#     y = fetchCompany("dis")
-#     writer.writerow([0,0,y["current_price"],0,0])
-
-# with open('mycsvfile.csv') as f:
-#     print(f.read())
 
 
 

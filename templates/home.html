@@ -46,24 +46,25 @@
   </ul>
 
 
-  <form>
-    <input type="text" name="inputticker" value="{{ inputticker }}" autofocus="autofocus" />
+  <form method="POST">
+    <input type="text" name="input_ticker" value= "{{input_ticker}}" autofocus="autofocus" />
+    <!-- <input type="float" name="purchase_price" value= "{{purchase_price}}" autofocus="autofocus" /> -->
     <input type="submit" value="Find ticker" />
   </form>
 
-
+{% if results %}
   <table>
       <tr>
           <th>Ticker</th>
-          <th>Value</th>       
+          <th>Value</th>
       </tr>
       <tr>
-        <th>      
-        </th>
-      
+        <td> "{{ results["ticker"] }}" </td>
+        <td> "{{ results["current_price"] }}" </td>
+
       </tr>
   </table>
-   
+{% endif %}
 </body>
 
 </html>
