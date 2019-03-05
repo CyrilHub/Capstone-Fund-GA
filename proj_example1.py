@@ -1,4 +1,4 @@
-
+import CPB_Cap
 from flask import Flask, render_template
 import requests
 import csv
@@ -171,6 +171,11 @@ def company(user_ticker):
 # @app.route("/<user_ticker>" )
 # def company(user_ticker):
 #     return render_template("watch.html", x=fetchwWatch(user_ticker))
+
+
+###
+### Cyril
+###
 
 
 

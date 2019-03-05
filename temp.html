@@ -1,0 +1,21 @@
+{% if inputticker %}
+
+  <table>
+      <tr>
+          <th>Ticker</th>
+          <th>Value</th>       
+      </tr>
+
+      <tr>
+          <td>
+              <a href="/movies/{{ result.imdbID }}">{{ result.get_movie_title() }}
+              </td>
+          <td>{{ result.get_movie_year() }}</td>
+          <td>
+              <img src="{{ result.get_movie_poster() }}" height="100px" />
+          </td>
+      </tr>
+      {% endfor %}
+
+  </table>
+  {% endif %} 
