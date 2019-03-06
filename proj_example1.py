@@ -138,13 +138,14 @@ def fetchWatch(ticker):
         })
 
 
-def plotticker(ticker):
-    
+def plotticker(ticker):    
+    pass
 
 
 
 #The function under @app.after_request prevent formats from being cached.
 #We had issues were we updated html files but they didn't
+
 @app.after_request
 def add_header(r):
     """
