@@ -106,21 +106,27 @@ def fetchHeld(ticker):
         "percent_change" : percent_change
         })
 
+
+# Gets all the data iexTrading has on ticker in the held dictionary and 
+# returns specific key from that list as dictionary. 
+# The current market values will be compared to hardcoded value of interest
 def fetchWatch(ticker):
+    # Gets all the data iexTrading has on ticker which comes is a json 
     r = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format(ticker))
     name = r.json()["quote"]["companyName"]
+    # {:,.2f} determines the data's precision, in case 2
     market_cap = '${:,.2f}'.format(r.json()["quote"]["marketCap"])
     sector = r.json()["quote"]["sector"]
     current_price = '{:,.2f}'.format(r.json()["quote"]["latestPrice"])
     prev_close = '${:,.2f}'.format(r.json()["quote"]["previousClose"])
-    target_price = watch[ticker]
+    target_price = watch[ticker]   
     if r.json()["quote"]["peRatio"] is None:
         pe_ratio = "null"
     else:
         pe_ratio = '{:,.2f}'.format(r.json()["quote"]["peRatio"])
     volume = '{:,.0f}'.format(r.json()["quote"]["latestVolume"])
     avg_volume = '{:,.0f}'.format(r.json()["quote"]["avgTotalVolume"])
-    percent_change = '{:,.2%}'.format(r.json()["quote"]["changePercent"])
+    percent_change = '{:,.2%}'.format(r.json()["quote"]["changePercent"])    
     x = StockCalcs(ticker=ticker)
     above_target = '{:,.2%}'.format(x.watch_distance(float(current_price)))
     return({
@@ -138,29 +144,6 @@ def fetchWatch(ticker):
         "percent_change" : percent_change
         })
 
-def fetchSold(ticker):
-    r = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format(ticker))
-    name = r.json()["quote"]["companyName"]
-    market_cap = r.json()["quote"]["marketCap"]
-    sector = r.json()["quote"]["sector"]
-    current_price = r.json()["quote"]["latestPrice"]
-    prev_close = r.json()["quote"]["previousClose"]
-    price_sold = sold[ticker][0]
-    date_sold = sold[ticker][1]
-    x = StockCalcs(ticker=ticker)
-    post_sale_performance = x.change_since_sale(current_price)
-    return({
-        "name": name,
-        "market_cap": market_cap,
-        "ticker": ticker,
-        "sector": sector,
-        "current_price": current_price,
-        "prev_close": prev_close,
-        "target_price": target_price,
-        "above_target" : above_target
-        })
-
-    # parse request into databse
 
 @app.after_request
 def add_header(r):
