@@ -5,7 +5,7 @@ import csv
 
 app = Flask(__name__)
 
-
+#separate dictionaries for stock that are held vs stocks that are potential buys
 held = {
         'dis' : 87.76,
         'nvda' : 19.62,
@@ -28,52 +28,42 @@ watch = {
         'mtch' : 45.75
         }
 
-sold = {
-        'ba' : [20.78, "April 2, 2018"],
-        'x' : [33.94, "April 23, 2018"],
-        'rgnx' : [70.45, "August 1, 2018"],
-        'hpq' : [25.77, "September 1, 2018"],
-        }
-
-
 
 class StockCalcs:
 
-    def __init__(self, ticker):
+    def __init__(self, ticker):   #Class inializer function
         self.tic = ticker
 
     def held_return(self, current_price):
+        #Function calculates the return of stocks that are held
         stock_return = (current_price / held[self.tic]) - 1
         return stock_return
 
     def watch_distance(self, current_price):
+        #Function calculates how far away the current price of a stock on watch is from its target price
         above_target = (current_price / watch[self.tic]) - 1
         return above_target
 
-    def change_since_sale(self, current_price):
-        post_sale_perf = (current_price / sold[self.tic]) - 1
-        return post_sale_perf
-
     def confirm_ticker(self):
+        #Function confirms a ticker exists, and if it does returns values from the iextrading.com API.
         api = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format(self.tic))
-
-        print(api.json())
         result = api.json()
-        print(result.keys())
         if "quote" in result.keys():
             current_price = '{:,.2f}'.format(api.json()["quote"]["latestPrice"])
             ticker = self.tic
+            name = api.json()["quote"]["companyName"]
             return {
                 "current_price": current_price,
-                "ticker": ticker
+                "ticker": ticker.upper(),
+                "name": name
             }
         else:
             return None
 
 
-
 def fetchHeld(ticker):
-    # GET request to url www.iextrading.com/company_name
+    #Function scrapes data for stocks in the "held" dictionary.
+    #Formating was done here instead of the html pages in order to make it easier to pass values.
     r = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format(ticker))
     name = r.json()["quote"]["companyName"]
     market_cap = '${:,.2f}'.format(r.json()["quote"]["marketCap"])
@@ -81,6 +71,7 @@ def fetchHeld(ticker):
     current_price = '{:,.2f}'.format(r.json()["quote"]["latestPrice"])
     prev_close = '${:,.2f}'.format(r.json()["quote"]["previousClose"])
     purchase_price = '${:,.2f}'.format(held[ticker])
+    #This if/else statement is needed because some stocks pass "null" for the PE Ratio instead of a float value
     if r.json()["quote"]["peRatio"] is None:
         pe_ratio = "null"
     else:
@@ -88,8 +79,9 @@ def fetchHeld(ticker):
     volume = '{:,.0f}'.format(r.json()["quote"]["latestVolume"])
     avg_volume = '{:,.0f}'.format(r.json()["quote"]["avgTotalVolume"])
     percent_change = '{:,.2%}'.format(r.json()["quote"]["changePercent"])
-    x = StockCalcs(ticker=ticker)
+    x = StockCalcs(ticker=ticker)  #This declares "x" as a StockCalcs object type, allowing the next line of code to use a StockCalcs method
     stock_return = '{:,.2%}'.format(x.held_return(float(current_price)))
+    #The return statement passes the values above as a dictionary straight a single variable on the render_template line in @app.route("/<user_ticker>" )
     return({
         "name": name,
         "market_cap": market_cap,
@@ -137,30 +129,7 @@ def fetchWatch(ticker):
         "percent_change" : percent_change
         })
 
-def fetchSold(ticker):
-    r = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format(ticker))
-    name = r.json()["quote"]["companyName"]
-    market_cap = r.json()["quote"]["marketCap"]
-    sector = r.json()["quote"]["sector"]
-    current_price = r.json()["quote"]["latestPrice"]
-    prev_close = r.json()["quote"]["previousClose"]
-    price_sold = sold[ticker][0]
-    date_sold = sold[ticker][1]
-    x = StockCalcs(ticker=ticker)
-    post_sale_performance = x.change_since_sale(current_price)
-    return({
-        "name": name,
-        "market_cap": market_cap,
-        "ticker": ticker,
-        "sector": sector,
-        "current_price": current_price,
-        "prev_close": prev_close,
-        "target_price": target_price,
-        "above_target" : above_target
-        })
-
-    # parse request into databse
-
+#Lines 133 to 143 prevent formats from being cached. We had issues were we updated html files but they didn't
 @app.after_request
 def add_header(r):
     """
@@ -196,20 +165,11 @@ def company(user_ticker):
         return render_template("held.html", x=fetchHeld(user_ticker))
     elif user_ticker in watch:
         return render_template("watch.html", x=fetchWatch(user_ticker))
-    elif user_ticker in sold:
-        return render_template("sold.html", x=fetchSold(user_ticker))
-
-# @app.route("/<user_ticker>" )
-# def company(user_ticker):
-#     return render_template("watch.html", x=fetchwWatch(user_ticker))
 
 
 ###
 ### Cyril
 ###
-
-
-
 
 
 # Run the app when the program starts!

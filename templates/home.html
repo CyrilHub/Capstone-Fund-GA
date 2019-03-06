@@ -26,6 +26,12 @@
     <li> <a href="/xyl" >Xylem<a/> </li>
   </ul>
 
+  <!-- <ul>
+   <h2> ALPHA HOLDINGS </h2>
+   <li> <a href="/dis" >Disney</a> </li>
+  </ul> -->
+
+
   <ul>
     <h2> WATCH LIST </h2>
     <li> <a href="/chrw" > CH Robinson Worldwide<a/> </li>
@@ -36,31 +42,35 @@
 
   </ul>
 
-  <ul>
-    <h2> SOLD </h2>
-    <li> <a href="/ba" > The Boeing Company<a/> </li>
-    <li> <a href="/x" > United States Steel Corp<a/> </li>
-    <li> <a href="/rgnx" > RegenxBio Inc<a/> </li>
-    <li> <a href="/hpq" > HP Inc<a/> </li>
+<br>
+<br>
 
-  </ul>
-
-
+<h2> ENTER A TICKER </h2>
   <form method="POST">
     <input type="text" name="input_ticker" value= "{{input_ticker}}" autofocus="autofocus" />
     <!-- <input type="float" name="purchase_price" value= "{{purchase_price}}" autofocus="autofocus" /> -->
-    <input type="submit" value="Find ticker" />
+    <input type="submit" value="CLICK TO FIND" />
   </form>
 
 {% if results %}
   <table>
       <tr>
           <th>Ticker</th>
-          <th>Value</th>
+          <th>Company</th>
+          <th>Current Price</th>
+          <th>Action</th>
       </tr>
       <tr>
-        <td> "{{ results["ticker"] }}" </td>
-        <td> "{{ results["current_price"] }}" </td>
+        <td> {{ results["ticker"] }} </td>
+        <td> {{ results["name"] }} </td>
+        <td> ${{ results["current_price"] }} </td>
+        <td> <form method="POST">
+          <input type="text" name="input_ticker" value= "{{input_ticker}}" autofocus="autofocus" />
+          <input type="submit" value="Find ticker" />
+        </form>
+
+
+         </td>
 
       </tr>
   </table>
