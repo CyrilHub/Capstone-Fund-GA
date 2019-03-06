@@ -151,30 +151,25 @@ def add_header(r):
     r.headers['Cache-Control'] = 'public, max-age=0'
     return r
 
+
 @app.route('/', methods = ['GET', 'POST'])
 def home():
-    # input_ticker = StockCalcs(request.form["ticker"])
-    # input_ticker.confirm_ticker()
+    #The TRY command allows the site to "exist" if a new ticker has not yet been entered
     try:
         new_ticker = (request.form["input_ticker"])
         ticker_dict = StockCalcs(new_ticker)
-        # new_purchase_price = request.form["purchase_price"]
         return render_template('home.html', results=ticker_dict.confirm_ticker())   #render template takes file from templates folder, then returns it as a string.
     except:
         return render_template('home.html')
 
 
-
-    print("test",request.form["input_ticker"])
-
-
 @app.route("/<user_ticker>" )
 def company(user_ticker):
+    #The if/elif series of commands exists to call different templates depending on the status of each stock (hled vs watch)
     if user_ticker in held:
         return render_template("held.html", x=fetchHeld(user_ticker))
     elif user_ticker in watch:
         return render_template("watch.html", x=fetchWatch(user_ticker))
-
 
 
 # Run the app when the program starts!
