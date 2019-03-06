@@ -1,7 +1,7 @@
-import CPB_Cap
 from flask import Flask, render_template, request
 import requests
-import csv
+from flask import Flask, render_template, request
+
 
 app = Flask(__name__)
 
@@ -97,14 +97,21 @@ def fetchHeld(ticker):
         "percent_change" : percent_change
         })
 
+
+# Gets all the data iexTrading has on ticker in the held dictionary and
+# returns specific key from that list as dictionary.
+# The current market values will be compared to hardcoded value of interest
 def fetchWatch(ticker):
+    # Gets all the data iexTrading has on ticker which comes is a json
     r = requests.get("https://api.iextrading.com/1.0/stock/{}/book".format(ticker))
     name = r.json()["quote"]["companyName"]
+    # {:,.2f} determines the data's precision, in case 2
     market_cap = '${:,.2f}'.format(r.json()["quote"]["marketCap"])
     sector = r.json()["quote"]["sector"]
     current_price = '{:,.2f}'.format(r.json()["quote"]["latestPrice"])
     prev_close = '${:,.2f}'.format(r.json()["quote"]["previousClose"])
     target_price = watch[ticker]
+    #This if/else statement is needed because some stocks pass "null" for the PE Ratio instead of a float value
     if r.json()["quote"]["peRatio"] is None:
         pe_ratio = "null"
     else:
@@ -112,8 +119,9 @@ def fetchWatch(ticker):
     volume = '{:,.0f}'.format(r.json()["quote"]["latestVolume"])
     avg_volume = '{:,.0f}'.format(r.json()["quote"]["avgTotalVolume"])
     percent_change = '{:,.2%}'.format(r.json()["quote"]["changePercent"])
-    x = StockCalcs(ticker=ticker)
+    x = StockCalcs(ticker=ticker)   #This declares "x" as a StockCalcs object type, allowing the next line of code to use a StockCalcs method
     above_target = '{:,.2%}'.format(x.watch_distance(float(current_price)))
+    #The return statement passes the values above as a dictionary straight a single variable on the render_template line in @app.route("/<user_ticker>" )
     return({
         "name": name,
         "market_cap": market_cap,
@@ -129,7 +137,8 @@ def fetchWatch(ticker):
         "percent_change" : percent_change
         })
 
-#Lines 133 to 143 prevent formats from being cached. We had issues were we updated html files but they didn't
+#The function under @app.after_request prevent formats from being cached.
+#We had issues were we updated html files but they didn't
 @app.after_request
 def add_header(r):
     """
@@ -166,10 +175,6 @@ def company(user_ticker):
     elif user_ticker in watch:
         return render_template("watch.html", x=fetchWatch(user_ticker))
 
-
-###
-### Cyril
-###
 
 
 # Run the app when the program starts!
