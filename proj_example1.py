@@ -137,6 +137,12 @@ def fetchWatch(ticker):
         "percent_change" : percent_change
         })
 
+
+def plotticker(ticker):
+    
+
+
+
 #The function under @app.after_request prevent formats from being cached.
 #We had issues were we updated html files but they didn't
 @app.after_request
