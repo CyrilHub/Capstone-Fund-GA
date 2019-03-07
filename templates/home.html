@@ -51,19 +51,21 @@
     <!-- <input type="float" name="purchase_price" value= "{{purchase_price}}" autofocus="autofocus" /> -->
     <input type="submit" value="CLICK TO FIND" />
   </form>
-
+<br>
 {% if results %}
   <table>
       <tr>
           <th>Ticker</th>
           <th>Company</th>
           <th>Current Price</th>
+          <th>PE Ratio</th>
           <th>Action</th>
       </tr>
       <tr>
         <td> {{ results["ticker"] }} </td>
         <td> {{ results["name"] }} </td>
         <td> ${{ results["current_price"] }} </td>
+        <td> {{ results["pe_ratio"] }} </td>
         <td> <form method="POST">
           <input type="text" name="input_ticker" value= "{{input_ticker}}" autofocus="autofocus" />
           <input type="submit" value="Find ticker" />

@@ -22,7 +22,7 @@ held = {
         }
 
 watch = {
-        'chrw' : 85.00,
+        'chrw' : 85.11,
         'ddd' : 10.50,
         'rop' : 288.50,
         'mtch' : 45.75
@@ -52,10 +52,12 @@ class StockCalcs:
             current_price = '{:,.2f}'.format(api.json()["quote"]["latestPrice"])
             ticker = self.tic
             name = api.json()["quote"]["companyName"]
+            pe_ratio = '{:,.2f}'.format(api.json()["quote"]["peRatio"])
             return {
                 "current_price": current_price,
                 "ticker": ticker.upper(),
-                "name": name
+                "name": name,
+                "pe_ratio": pe_ratio
             }
         else:
             return None
@@ -138,7 +140,7 @@ def fetchWatch(ticker):
         })
 
 
-def plotticker(ticker):    
+def plotticker(ticker):
     pass
 
 
